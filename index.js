@@ -16,19 +16,21 @@ const friends = [{
 }
 ]
 
-
-
 server.on('request',(req,res)=>{
 
     // this converts ".../friends/2" to ['...','friends','2']
     const items = req.url.split('/')
 
     if (req.method === 'POST' && items[1]==='friends'){
+
+        //we write on the on required object whenever data event occurs.
         req.on('data',(data)=>{
-            const newfriend = data.toString(); //data is in writable format i.e buffer form, So it must be converted to string
+            const newfriend = data.toString(); //data is in writable format i.e buffer form, So it must be converted to string.
             console.log(newfriend)
             friends.push(JSON.parse(newfriend));
+           
         })
+        req.pipe(res) //no need to end this req here.
     }
 
     else if ( req.method ==='GET' && items[1] === 'friends'){
