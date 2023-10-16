@@ -23,9 +23,15 @@ server.on('request',(req,res)=>{
     // this converts ".../friends/2" to ['...','friends','2']
     const items = req.url.split('/')
 
-    
+    if (req.method === 'POST' && items[1]==='friends'){
+        req.on('data',(data)=>{
+            const newfriend = data.toString(); //data is in writable format i.e buffer form, So it must be converted to string
+            console.log(newfriend)
+            friends.push(JSON.parse(newfriend));
+        })
+    }
 
-    if ( items[1] === 'friends'){
+    else if ( req.method ==='GET' && items[1] === 'friends'){
         res.statusCode = 200
         res.setHeader('content-type','application/json')
 
@@ -40,7 +46,7 @@ server.on('request',(req,res)=>{
     }
 
 
-    else if (items[1] === '/messages'){
+    else if ( req.method ==='GET' && items[1] === '/messages'){
         res.setHeader('Content-Type','text/html')
         res.write('<html>')
         res.write('<body>')
